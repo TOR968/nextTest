@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres';
+import { unstable_noStore as noStore } from 'next/cache'; 
 import {
   SellerField,
   SellersTableType,
@@ -17,6 +18,7 @@ import { formatCurrency } from './utils';
 export async function fetchIncome() {
   // Add noStore() here prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
+  noStore();
 
   try {
     const data = await sql<Income>`SELECT * FROM income`;
@@ -33,6 +35,8 @@ export async function fetchIncome() {
  * @returns {Promise<LatestInvoiceRaw[]>} A promise that resolves to an array of the latest invoices.
  */
 export async function fetchLatestInvoices() {
+  noStore();
+
   try {
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, sellers.name, sellers.image_url, sellers.email, invoices.id
@@ -57,6 +61,8 @@ export async function fetchLatestInvoices() {
  * @returns {Promise<object>} A promise that resolves to an object containing card data.
  */
 export async function fetchCardData() {
+  noStore();
+
   try {
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const sellerCountPromise = sql`SELECT COUNT(*) FROM sellers`;
@@ -103,6 +109,8 @@ export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
 ) {
+  noStore();
+
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -141,6 +149,8 @@ export async function fetchFilteredInvoices(
  */
 export async function fetchInvoicesPages(query: string) {
   try {
+    noStore();
+
     const count = await sql`SELECT COUNT(*)
     FROM invoices
     JOIN sellers ON invoices.seller_id = sellers.id
@@ -166,6 +176,8 @@ export async function fetchInvoicesPages(query: string) {
  * @returns {Promise<InvoiceForm>} A promise that resolves to the details of the specified invoice.
  */
 export async function fetchInvoiceById(id: string) {
+  noStore();
+
   try {
     const data = await sql<InvoiceForm>`
       SELECT
@@ -195,6 +207,8 @@ export async function fetchInvoiceById(id: string) {
  * @returns {Promise<SellerField[]>} A promise that resolves to an array of seller data.
  */
 export async function fetchSellers() {
+  noStore();
+
   try {
     const data = await sql<SellerField>`
       SELECT
@@ -218,6 +232,8 @@ export async function fetchSellers() {
  * @returns {Promise<FormattedSellersTable[]>} A promise that resolves to an array of formatted seller data.
  */
 export async function fetchFilteredSellers(query: string) {
+  noStore();
+
   try {
     const data = await sql<SellersTableType>`
 		SELECT
@@ -256,6 +272,8 @@ export async function fetchFilteredSellers(query: string) {
  * @returns {Promise<User>} A promise that resolves to the user details.
  */
 export async function getUser(email: string) {
+  noStore();
+
   try {
     const user = await sql`SELECT * FROM users WHERE email=${email}`;
     return user.rows[0] as User;
