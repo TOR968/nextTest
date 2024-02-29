@@ -1,5 +1,8 @@
 import TradeHubLogo from '@/app/ui/tradehub-logo';
 import Link from 'next/link';
+import style from '@/app/ui/home.module.css';
+import { rubik } from "./ui/fonts";
+import Image from "next/image";
 
 export default function Page() {
   return (
@@ -9,7 +12,8 @@ export default function Page() {
       </div>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row ">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-neutral-900 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`text-5xl text-white md:text-3xl md:leading-normal`}>
+          <div className={style.circle} />
+          <p className={`${rubik.className} text-5xl text-white md:text-3xl md:leading-normal`}>
             <strong>Welcome to TradeHub!</strong>
           </p>
           <Link
@@ -20,7 +24,20 @@ export default function Page() {
           </Link>
         </div>
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Images go here */}
+          <Image
+            src="/hero-desktop.png"
+            width={1000}
+            height={686}
+            className="hidden md:block"
+            alt="Desktop App Logo"
+          />
+          <Image
+            src="/hero-mobile.png"
+            width={560}
+            height={620}
+            className="block md:hidden"
+            alt="Mobile App Logo"
+          />
         </div>
       </div>
     </main>
